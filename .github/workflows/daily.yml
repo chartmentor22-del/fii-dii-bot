@@ -1,11 +1,11 @@
-name: Market Bot Suite
+name: Market News Bot
 on:
-  workflow_dispatch: # बटन दबाने पर चलेगा
+  workflow_dispatch:
   schedule:
-    - cron: '0 3-13 * * 1-5' # सोमवार-शुक्रवार, हर घंटे न्यूज़
+    - cron: '0 * * * *' # Har ghante chalega
 
 jobs:
-  build:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
