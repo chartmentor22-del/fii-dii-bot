@@ -1,0 +1,20 @@
+name: Daily FII DII Data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 14 * * 1-5' # Indian Time 8:00 PM (Mon-Fri)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install Requests
+        run: pip install requests
+      - name: Run Bot
+        run: python bot.py
