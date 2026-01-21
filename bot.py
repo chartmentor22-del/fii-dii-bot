@@ -1,37 +1,37 @@
 import requests
-import json
 
-# आपका टोकन और चैनल आईडी
-TOKEN = "8342805103:AAGt3Z4sFm5OGKTMastLXdU3Noq3KzuSsDw"
-CHAT_ID = "@chartmentor22"
+# Aapki Details
+TOKEN = "8358591937:AAFx0QhlswIGkn0Ell8Be8ueV4RKRRUUFiQ"
+CHAT_ID = "-1002340328243"
+API_KEY = "683bfbea1d8f4efe8e1df7e35e64653f"
 
-def get_fii_dii_data():
+def get_news():
     try:
-        # FII/DII डेटा के लिए API
-        response = requests.get("https://api.stockedge.com/api/v1/content/fii-dii-activity")
-        data = response.json()[0] 
-        
-        date = data['DateString']
-        fii_net = data['FiiNet']
-        dii_net = data['DiiNet']
-        
-        status_fii = "🟢 Buy" if fii_net > 0 else "🔴 Sell"
-        status_dii = "🟢 Buy" if dii_net > 0 else "🔴 Sell"
+        # Market ki latest hindi news ke liye query
+        url = f"https://newsapi.org/v2/everything?q=nifty+sensex+stock+market&language=hi&sortBy=publishedAt&apiKey={API_KEY}"
+        response = requests.get(url).json()
+        articles = response.get('articles', [])
 
-        msg = f"📊 *FII & DII Daily Activity*\n"
-        msg += f"📅 *Date:* {date}\n\n"
-        msg += f"🚀 *FII Net:* {fii_net} Cr ({status_fii})\n"
-        msg += f"🏠 *DII Net:* {dii_net} Cr ({status_dii})\n\n"
-        msg += f"✅ Data shared by @chartmentor22"
+        if not articles:
+            return "📢 Abhi market ki koi nayi news nahi mili hai."
+
+        msg = "🚀 *LIVE Market News Update:*\n\n"
+        # Top 3 headlines
+        for art in articles[:3]:
+            title = art.get('title')
+            if title:
+                msg += f"🔹 {title}\n\n"
+        
+        msg += "━━━━━━━━━━━━━━━━━━\n✅ *By @Chartmentor_News_bot*"
         return msg
     except Exception as e:
-        return "❌ डेटा अभी अपडेट नहीं हुआ है। कृपया शाम 7:30 के बाद चेक करें।"
+        return "⚠️ News fetch karne mein dikkat aa rahi hai."
 
-def send_telegram(message):
+def send_to_telegram(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
+    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
     requests.post(url, json=payload)
 
 if __name__ == "__main__":
-    content = get_fii_dii_data()
-    send_telegram(content)
+    content = get_news()
+    send_to_telegram(content)
