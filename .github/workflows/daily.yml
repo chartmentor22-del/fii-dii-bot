@@ -1,10 +1,11 @@
-
-name: Market News Bot
+name: Market Bot Suite
 on:
-  workflow_dispatch: # यह बटन दबाने पर चलेगा
+  workflow_dispatch: # बटन दबाने पर चलेगा
+  schedule:
+    - cron: '0 3-13 * * 1-5' # सोमवार-शुक्रवार, हर घंटे न्यूज़
 
 jobs:
-  run-news:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,5 +16,5 @@ jobs:
           python-version: '3.9'
       - name: Install dependencies
         run: pip install requests
-      - name: Run News Bot
-        run: python news_bot.py
+      - name: Run Bot
+        run: python bot.py
