@@ -1,20 +1,22 @@
-name: Daily FII DII Data
+name: Daily FII DII Update
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '30 14 * * 1-5' # Indian Time 8:00 PM (Mon-Fri)
+    - cron: '30 14 * * 1-5' # सोमवार से शुक्रवार, भारतीय समय रात 8:00 बजे
+  workflow_dispatch: # इससे आप खुद बटन दबाकर चेक कर सकते हैं
 
 jobs:
-  build:
+  run-bot:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.9'
-      - name: Install Requests
+      - name: Install dependencies
         run: pip install requests
-      - name: Run Bot
+      - name: Run bot script
         run: python bot.py
+
+
