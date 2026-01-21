@@ -1,6 +1,7 @@
+
 import requests
 
-# Aapka Setup
+# आपका सेटअप
 TOKEN = "8358591937:AAFx0QhlswIGkn0Ell8Be8ueV4RKRRUUFiQ"
 CHAT_ID = "-1002340328243"
 
@@ -29,10 +30,12 @@ def get_fii_dii():
         return "⚠️ Data update hone mein samay lag raha hai."
 
 def send_to_telegram(text):
+    # यहाँ सुधार किया गया है (json=payload जोड़ा गया है)
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"})
+    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
+    response = requests.post(url, json=payload)
+    print(response.text) # यह चेक करने के लिए कि टेलीग्राम क्या बोल रहा है
 
 if __name__ == "__main__":
     message = get_fii_dii()
     send_to_telegram(message)
-
