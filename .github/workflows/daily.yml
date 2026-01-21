@@ -1,12 +1,10 @@
-name: Market Bot Suite
+
+name: Market News Bot
 on:
-  schedule:
-    - cron: '0 3-13 * * 1-5' # सोमवार-शुक्रवार, हर घंटे न्यूज़ के लिए
-    - cron: '30 14 * * 1-5' # शाम 8:00 PM (IST) पर FII-DII डेटा के लिए
-  workflow_dispatch: # बटन दबाकर खुद चलाने के लिए
+  workflow_dispatch: # यह बटन दबाने पर चलेगा
 
 jobs:
-  run-bots:
+  run-news:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,5 +17,3 @@ jobs:
         run: pip install requests
       - name: Run News Bot
         run: python news_bot.py
-      - name: Run FII DII Bot
-        run: python bot.py
