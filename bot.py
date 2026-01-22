@@ -1,6 +1,7 @@
 import requests
 
-TOKEN = "8342805103:AAGt3Z4sFnSOGKTMastLXdU3Noq3KzuSsDw"
+# नया टोकन यहाँ डाल दिया है
+TOKEN = "8342805103:AAGt3Z4sFm5OGKTMastLXdU3Noq3KzuSsDw"
 CHAT_ID = "-1002340328243"
 
 def get_fii_dii():
@@ -19,13 +20,10 @@ def get_fii_dii():
             data = response.json()
             latest = data[-1]
             
-            fii = latest['fiiNetValue']
-            dii = latest['diiNetValue']
-            
             msg = f"📊 *FII / DII Daily Activity*\n"
             msg += f"📅 *Date:* {latest['date']}\n\n"
-            msg += f"🏦 *FII Net:* {fii} Cr\n"
-            msg += f"🏠 *DII Net:* {dii} Cr\n\n"
+            msg += f"🏦 *FII Net:* {latest['fiiNetValue']} Cr\n"
+            msg += f"🏠 *DII Net:* {latest['diiNetValue']} Cr\n\n"
             msg += "✅ *Shared by @chartmentor22*"
             return msg
         return "⚠️ NSE पर डेटा अभी उपलब्ध नहीं है।"
