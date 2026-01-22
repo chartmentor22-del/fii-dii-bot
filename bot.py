@@ -1,35 +1,41 @@
 import requests
-import json
 
-# आपका टोकन और चैनल आईडी
-TOKEN = "8342805103:AAGt3Z4sFm5OGKTMastLXdU3Noq3KzuSsDw"
-CHAT_ID = "@chartmentor22"
+# आपका सही टोकन और आईडी
+TOKEN = "8342805103:AAGt3Z4sFnSOGKTMastLXdU3Noq3KzuSsDw"
+CHAT_ID = "-1002340328243" 
 
 def get_fii_dii_data():
     try:
-        # FII/DII डेटा के लिए API
-        response = requests.get("https://api.stockedge.com/api/v1/content/fii-dii-activity")
-        data = response.json()[0] 
+        url = "https://www.nseindia.com/api/fiidiiTradeReact"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': '*/*',
+            'Referer': 'https://www.nseindia.com/'
+        }
+        session = requests.Session()
+        session.get("https://www.nseindia.com", headers=headers, timeout=10)
+        response = session.get(url, headers=headers, timeout=10)
         
-        date = data['DateString']
-        fii_net = data['FiiNet']
-        dii_net = data['DiiNet']
-        
-        status_fii = "🟢 Buy" if fii_net > 0 else "🔴 Sell"
-        status_dii = "🟢 Buy" if dii_net > 0 else "🔴 Sell"
-
-        msg = f"📊 *FII & DII Daily Activity*\n"
-        msg += f"📅 *Date:* {date}\n\n"
-        msg += f"🚀 *FII Net:* {fii_net} Cr ({status_fii})\n"
-        msg += f"🏠 *DII Net:* {dii_net} Cr ({status_dii})\n\n"
-        msg += f"✅ Data shared by @chartmentor22"
-        return msg
+        if response.status_code == 200:
+            data = response.json()
+            latest = data[-1]
+            
+            fii_val = float(latest['fiiNetValue'].replace(',', ''))
+            dii_val = float(latest['diiNetValue'].replace(',', ''))
+            
+            msg = f"📊 *FII / DII Daily Activity*\n"
+            msg += f"📅 *Date:* {latest['date']}\n\n"
+            msg += f"🏦 *FII Net:* {latest['fiiNetValue']} Cr {'🟢 Buy' if fii_val > 0 else '🔴 Sell'}\n"
+            msg += f"🏠 *DII Net:* {latest['diiNetValue']} Cr {'🟢 Buy' if dii_val > 0 else '🔴 Sell'}\n\n"
+            msg += "✅ *Shared by @chartmentor22*"
+            return msg
+        return "⚠️ NSE वेबसाइट पर अभी डेटा उपलब्ध नहीं है।"
     except Exception as e:
-        return "❌ डेटा अभी अपडेट नहीं हुआ है। कृपया शाम 7:30 के बाद चेक करें।"
+        return f"⚠️ डेटा लोड करने में समस्या आई।"
 
-def send_telegram(message):
+def send_telegram(text):
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}
+    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}
     requests.post(url, json=payload)
 
 if __name__ == "__main__":
